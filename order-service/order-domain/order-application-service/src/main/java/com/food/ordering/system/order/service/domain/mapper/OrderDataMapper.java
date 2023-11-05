@@ -21,28 +21,29 @@ import java.util.UUID;
 public class OrderDataMapper {
     public Restaurant createOrderCommandToRestaurant(CreateOrderCommand createOrderCommand) {
         return Restaurant.builder()
-                .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
-                .products(createOrderCommand.getItems().stream().map(orderItem -> new Product(new ProductId(orderItem.getProductId()))).toList())
+                .restaurantId(new RestaurantId(createOrderCommand.restaurantId()))
+                .products(createOrderCommand.items().stream().map(orderItem -> new Product(new ProductId(orderItem.productId()))).toList())
                 .build();
     }
 
     public Order createOrderCommandToOrder(CreateOrderCommand createOrderCommand) {
         return Order.builder()
-                .customerId(new CustomerId(createOrderCommand.getCustomerId()))
-                .restaurantId(new RestaurantId(createOrderCommand.getRestaurantId()))
+                .customerId(new CustomerId(createOrderCommand.customerId()))
+                .restaurantId(new RestaurantId(createOrderCommand.restaurantId()))
                 .deliveryAddress(orderAddressToStreetAddress(createOrderCommand))
-                .price(new Money(createOrderCommand.getPrice()))
+                .price(new Money(createOrderCommand.price()))
                 .items(orderItemsToOrderItemEntities(createOrderCommand))
                 .build();
     }
 
     private List<OrderItem> orderItemsToOrderItemEntities(CreateOrderCommand createOrderCommand) {
-        return createOrderCommand.getItems().stream()
+        return createOrderCommand.items().stream()
                 .map(orderItem ->
                         OrderItem.builder()
-                                .product(new Product(new ProductId(orderItem.getProductId())))
-                                .price(new Money(orderItem.getPrice()))
-                                .quantity(orderItem.getQuantity())
+                                .product(new Product(new ProductId(orderItem.productId())))
+                                .price(new Money(orderItem.price()))
+                                .quantity(orderItem.quantity())
+                                .subTotal(new Money(orderItem.subTotal()))
                                 .build()
                 ).toList();
     }
@@ -57,9 +58,9 @@ public class OrderDataMapper {
 
     private StreetAddress orderAddressToStreetAddress(CreateOrderCommand createOrderCommand) {
         return new StreetAddress(UUID.randomUUID(),
-                createOrderCommand.getAddress().getStreet(),
-                createOrderCommand.getAddress().getPostalCode(),
-                createOrderCommand.getAddress().getCity());
+                createOrderCommand.address().getStreet(),
+                createOrderCommand.address().getPostalCode(),
+                createOrderCommand.address().getCity());
     }
 
     public CreateOrderResponse orderToCreateOrderResponse(Order order, String message) {
