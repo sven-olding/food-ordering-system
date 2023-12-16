@@ -27,7 +27,7 @@ public class OrderGlobalExceptionHandler extends GlobalExceptionHandler {
 
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(value = {OrderDomainException.class})
+    @ExceptionHandler(value = {OrderNotFoundException.class})
     public ErrorDTO handleException(OrderNotFoundException orderNotFoundException) {
         log.error(orderNotFoundException.getMessage());
         return ErrorDTO.builder()
