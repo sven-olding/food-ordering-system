@@ -14,6 +14,7 @@ import com.food.ordering.system.order.service.domain.entity.Restaurant;
 import com.food.ordering.system.order.service.domain.valueobject.StreetAddress;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,12 +33,12 @@ public class OrderDataMapper {
                 .restaurantId(new RestaurantId(createOrderCommand.restaurantId()))
                 .deliveryAddress(orderAddressToStreetAddress(createOrderCommand))
                 .price(new Money(createOrderCommand.price()))
-                .items(orderItemsToOrderItemEntities(createOrderCommand))
+                .items(orderItemsToOrderItemEntities(createOrderCommand.items()))
                 .build();
     }
 
-    private List<OrderItem> orderItemsToOrderItemEntities(CreateOrderCommand createOrderCommand) {
-        return createOrderCommand.items().stream()
+    private List<OrderItem> orderItemsToOrderItemEntities(@NotNull List<com.food.ordering.system.order.service.domain.dto.create.OrderItem> orderItems) {
+        return orderItems.stream()
                 .map(orderItem ->
                         OrderItem.builder()
                                 .product(new Product(new ProductId(orderItem.productId())))

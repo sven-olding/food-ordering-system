@@ -77,18 +77,14 @@ public class OrderDataAccessMapper {
 
     private List<OrderItemEntity> orderItemsToOrderItemEntities(List<OrderItem> items) {
         return items.stream()
-                .map(this::orderItemToOrderItemEntity)
+                .map(orderItem -> OrderItemEntity.builder()
+                        .id(orderItem.getId().getValue())
+                        .productId(orderItem.getProduct().getId().getValue())
+                        .price(orderItem.getPrice().getAmount())
+                        .quantity(orderItem.getQuantity())
+                        .subTotal(orderItem.getSubTotal().getAmount())
+                        .build())
                 .toList();
-    }
-
-    private OrderItemEntity orderItemToOrderItemEntity(OrderItem orderItem) {
-        return OrderItemEntity.builder()
-                .quantity(orderItem.getQuantity())
-                .productId(orderItem.getProduct().getId().getValue())
-                .subTotal(orderItem.getSubTotal().getAmount())
-                .price(orderItem.getPrice().getAmount())
-                .id(orderItem.getId().getValue())
-                .build();
     }
 
     private OrderAddressEntity streetAddressToOrderAddressEntity(StreetAddress streetAddress) {
