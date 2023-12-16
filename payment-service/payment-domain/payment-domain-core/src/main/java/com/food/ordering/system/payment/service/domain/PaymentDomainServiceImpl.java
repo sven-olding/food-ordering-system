@@ -2,7 +2,7 @@ package com.food.ordering.system.payment.service.domain;
 
 import com.food.ordering.system.domain.valueobject.Money;
 import com.food.ordering.system.domain.valueobject.PaymentStatus;
-import com.food.ordering.system.payment.service.domain.entity.CreditEntity;
+import com.food.ordering.system.payment.service.domain.entity.CreditEntry;
 import com.food.ordering.system.payment.service.domain.entity.CreditHistory;
 import com.food.ordering.system.payment.service.domain.entity.Payment;
 import com.food.ordering.system.payment.service.domain.event.PaymentCancelledEvent;
@@ -24,7 +24,7 @@ import static com.food.ordering.system.domain.DomainConstants.TIMEZONE_ID;
 public class PaymentDomainServiceImpl implements PaymentDomainService {
     @Override
     public PaymentEvent validateAndInitiatePayment(Payment payment,
-                                                   CreditEntity creditEntry,
+                                                   CreditEntry creditEntry,
                                                    List<CreditHistory> creditHistoryList,
                                                    List<String> failureMessages) {
         payment.validatePayment(failureMessages);
@@ -46,7 +46,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
 
     @Override
     public PaymentEvent validateAndCancelPayment(Payment payment,
-                                                 CreditEntity creditEntry,
+                                                 CreditEntry creditEntry,
                                                  List<CreditHistory> creditHistoryList,
                                                  List<String> failureMessages) {
         payment.validatePayment(failureMessages);
@@ -63,7 +63,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
     }
 
 
-    private void validateCreditEntry(Payment payment, CreditEntity creditEntry, List<String> failureMessages) {
+    private void validateCreditEntry(Payment payment, CreditEntry creditEntry, List<String> failureMessages) {
         if (payment.getPrice().isGreaterThan(creditEntry.getTotalCreditAmount())) {
             log.error("Customer with id: {} doesn't have  not enough credit for payment", payment.getCustomerId().getValue());
             failureMessages.add("Customer with id: " + payment.getCustomerId().getValue()
@@ -72,7 +72,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
     }
 
 
-    private void subtractCreditEntry(Payment payment, CreditEntity creditEntry) {
+    private void subtractCreditEntry(Payment payment, CreditEntry creditEntry) {
         creditEntry.subtractCreditAmount(payment.getPrice());
     }
 
@@ -89,7 +89,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
     }
 
 
-    private void validateCreditHistory(CreditEntity creditEntry,
+    private void validateCreditHistory(CreditEntry creditEntry,
                                        List<CreditHistory> creditHistoryList,
                                        List<String> failureMessages) {
         Money totalCreditHistory = getTotalHistoryAmount(creditHistoryList, TransactionType.CREDIT);
@@ -115,7 +115,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
     }
 
 
-    private void addCreditEntry(Payment payment, CreditEntity creditEntry) {
+    private void addCreditEntry(Payment payment, CreditEntry creditEntry) {
         creditEntry.addCreditAmount(payment.getPrice());
     }
 
