@@ -26,9 +26,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql:
     init:
-      schema-locations: classpath:init-schema.sql
+      schema-locations: classpath:init-schema.sql, classpath:restaurant-schema.sql
       mode: always
       platform: postgres
+      data-locations: classpath:restaurant-data.sql
 
 kafka-config:
   bootstrap-servers: localhost:19092, localhost:29092, localhost:39092
