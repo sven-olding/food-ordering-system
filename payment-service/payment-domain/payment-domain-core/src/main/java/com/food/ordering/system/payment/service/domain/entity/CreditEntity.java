@@ -27,7 +27,7 @@ public class CreditEntity extends BaseEntity<CreditEntityId> {
         totalCreditAmount = totalCreditAmount.add(amount);
     }
 
-    public void substractCreditAmount(Money amount) {
+    public void subtractCreditAmount(Money amount) {
         totalCreditAmount = totalCreditAmount.substract(amount);
     }
 
