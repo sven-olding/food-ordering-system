@@ -1,11 +1,11 @@
 package com.food.ordering.system.order.service.dataaccess.restaurant.entity;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.UUID;

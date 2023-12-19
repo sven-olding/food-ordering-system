@@ -14,10 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>com.food.ordering.system</groupId>
-            <artifactId>payment-domain</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.food.ordering.system</groupId>
             <artifactId>common-domain</artifactId>
         </dependency>
         <dependency>
