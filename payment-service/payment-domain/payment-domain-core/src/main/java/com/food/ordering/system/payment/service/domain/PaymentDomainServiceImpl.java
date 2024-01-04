@@ -45,6 +45,7 @@ public class PaymentDomainServiceImpl implements PaymentDomainService {
                     paymentCompletedEventDomainEventPublisher);
         } else {
             log.info("Payment initiation is failed for order id: {}", payment.getOrderId().getValue());
+            payment.updateStatus(PaymentStatus.FAILED);
             return new PaymentFailedEvent(payment, ZonedDateTime.now(ZoneId.of(TIMEZONE_ID)), failureMessages,
                     paymentFailedEventDomainEventPublisher);
         }
