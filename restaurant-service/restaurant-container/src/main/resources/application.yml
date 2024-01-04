@@ -19,8 +19,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL9Dialect
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=restaurant&binaryTransfer=true&reWriteBatchedInserts=true&stringtype=unspecified
-    username: postgres
-    password: admin
+    username: pguser
+    password: pgpass
     driver-class-name: org.postgresql.Driver
   sql:
     init:
