@@ -27,10 +27,11 @@ public class PaymentRequestKafkaListener implements KafkaConsumer<PaymentRequest
     @Override
     @KafkaListener(id = "${kafka-consumer-config.payment-consumer-group-id}",
             topics = "${payment-service.payment-request-topic-name}")
-    public void receive(@Payload List<PaymentRequestAvroModel> messages,
-                        @Header List<String> keys,
-                        @Header List<Integer> partitions,
-                        @Header List<Long> offsets) {
+
+        public void receive(@Payload List<PaymentRequestAvroModel> messages,
+                @Header(KafkaHeaders.RECEIVED_KEY) List<String> keys,
+                @Header(KafkaHeaders.RECEIVED_PARTITION) List<Integer> partitions,
+                @Header(KafkaHeaders.OFFSET) List<Long> offsets) {
         log.info("{} number of payment requests received with keys:{}, partitions:{} and offsets: {}",
                 messages.size(),
                 keys.toString(),
