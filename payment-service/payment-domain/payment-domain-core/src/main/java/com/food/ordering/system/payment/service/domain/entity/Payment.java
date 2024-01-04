@@ -1,5 +1,6 @@
 package com.food.ordering.system.payment.service.domain.entity;
 
+import com.food.ordering.system.domain.DomainConstants;
 import com.food.ordering.system.domain.entity.AggregateRoot;
 import com.food.ordering.system.domain.valueobject.CustomerId;
 import com.food.ordering.system.domain.valueobject.Money;
@@ -32,7 +33,7 @@ public class Payment extends AggregateRoot<PaymentId> {
 
     public void initializePayment() {
         setId(new PaymentId(UUID.randomUUID()));
-        createdAt = ZonedDateTime.now(ZoneId.of("UTF"));
+        createdAt = ZonedDateTime.now(ZoneId.of(DomainConstants.TIMEZONE_ID));
     }
 
     public void validatePayment(List<String> failureMessages) {
