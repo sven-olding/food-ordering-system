@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/payment-service/payment-messaging/pom.xml" />
         <option value="$PROJECT_DIR$/payment-service/payment-domain/pom.xml" />
         <option value="$PROJECT_DIR$/payment-service/payment-domain/payment-domain-core/pom.xml" />
+        <option value="$PROJECT_DIR$/infrastructure/kafka/pom.xml" />
       </list>
     </option>
     <option name="workspaceImportForciblyTurnedOn" value="true" />
