@@ -49,10 +49,10 @@ public class RestaurantMessagingDataMapper {
     restaurantApprovalRequestAvroModelToRestaurantApproval(RestaurantApprovalRequestAvroModel
                                                                    restaurantApprovalRequestAvroModel) {
         return RestaurantApprovalRequest.builder()
-                .id(restaurantApprovalRequestAvroModel.getId())
-                .sagaId(restaurantApprovalRequestAvroModel.getSagaId())
-                .restaurantId(restaurantApprovalRequestAvroModel.getRestaurantId())
-                .orderId(restaurantApprovalRequestAvroModel.getOrderId())
+                .id(restaurantApprovalRequestAvroModel.getId().toString())
+                .sagaId(restaurantApprovalRequestAvroModel.getSagaId().toString())
+                .restaurantId(restaurantApprovalRequestAvroModel.getRestaurantId().toString())
+                .orderId(restaurantApprovalRequestAvroModel.getOrderId().toString())
                 .restaurantOrderStatus(RestaurantOrderStatus.valueOf(restaurantApprovalRequestAvroModel
                         .getRestaurantOrderStatus().name()))
                 .products(restaurantApprovalRequestAvroModel.getProducts()

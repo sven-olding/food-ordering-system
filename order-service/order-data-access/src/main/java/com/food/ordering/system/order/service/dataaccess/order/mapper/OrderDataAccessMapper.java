@@ -13,6 +13,7 @@ import com.food.ordering.system.order.service.domain.valueobject.TrackingId;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -44,9 +45,12 @@ public class OrderDataAccessMapper {
                 .customerId(new CustomerId(orderEntity.getCustomerId()))
                 .trackingId(new TrackingId(orderEntity.getTrackingId()))
                 .orderStatus(orderEntity.getOrderStatus())
+                .price(new Money(orderEntity.getPrice()))
                 .deliveryAddress(orderAddressEntityToStreetAddress(orderEntity.getAddress()))
-                .failureMessages(orderEntity.getFailureMessages() != null ?
-                        List.of(orderEntity.getFailureMessages().split(",")) : new ArrayList<>())
+                .failureMessages(orderEntity.getFailureMessages() != null
+                        && !orderEntity.getFailureMessages().isEmpty() ?
+                        new ArrayList<>(Arrays.asList(orderEntity.getFailureMessages().split(",")))
+                        : new ArrayList<>())
                 .items(orderItemEntitiesToOrderItems(orderEntity.getItems()))
                 .build();
     }

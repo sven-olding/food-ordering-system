@@ -15,6 +15,7 @@ import com.food.ordering.system.order.service.domain.valueobject.StreetAddress;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,6 +35,7 @@ public class OrderDataMapper {
                 .deliveryAddress(orderAddressToStreetAddress(createOrderCommand))
                 .price(new Money(createOrderCommand.price()))
                 .items(orderItemsToOrderItemEntities(createOrderCommand.items()))
+                .failureMessages(new ArrayList<>())
                 .build();
     }
 

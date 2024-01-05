@@ -37,8 +37,8 @@ public class CreateOrderKafkaMessagePublisher implements OrderCreatedPaymentRequ
 
             log.info("PaymentRequestAvroModel sent to Kafka for order id: {}", orderId);
         } catch (Exception e) {
-            log.error("Error while sending PaymentRequestAvroModel to Kafka with order id: {}, error: {}",
-                    orderId, e.getMessage());
+            log.error("Error while sending PaymentRequestAvroModel to Kafka with order id: {}, error: {}, cause: {}",
+                    orderId, e.getMessage(), e.getCause().getMessage());
         }
     }
 }
