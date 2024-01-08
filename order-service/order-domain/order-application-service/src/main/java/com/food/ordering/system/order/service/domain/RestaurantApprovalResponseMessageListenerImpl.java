@@ -18,17 +18,15 @@ public class RestaurantApprovalResponseMessageListenerImpl implements Restaurant
 
     @Override
     public void orderApproved(RestaurantApprovalResponse restaurantApprovalResponse) {
-        EmptyEvent emptyEvent = orderApprovalSaga.process(restaurantApprovalResponse);
+        orderApprovalSaga.process(restaurantApprovalResponse);
         log.info("Order with id: {} is approved", restaurantApprovalResponse.getOrderId());
-        emptyEvent.fire();
     }
 
     @Override
     public void orderRejected(RestaurantApprovalResponse restaurantApprovalResponse) {
-        OrderCancelledEvent orderCancelledEvent = orderApprovalSaga.rollback(restaurantApprovalResponse);
-        log.info("Publishing order cancelled event for order id: {} with failure messages: {}",
+        orderApprovalSaga.rollback(restaurantApprovalResponse);
+        log.info("Order Approval Saga rollback operation is copletet for order id: {} with failure messages: {}",
                 restaurantApprovalResponse.getOrderId(),
-                String.join(", ", orderCancelledEvent.getOrder().getFailureMessages()));
-        orderCancelledEvent.fire();
+                String.join(", ", restaurantApprovalResponse.getFailureMessages()));
     }
 }

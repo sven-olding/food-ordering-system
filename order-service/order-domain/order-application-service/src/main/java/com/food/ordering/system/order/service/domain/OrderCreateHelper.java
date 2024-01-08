@@ -10,9 +10,9 @@ import com.food.ordering.system.order.service.domain.event.OrderCreatedEvent;
 import com.food.ordering.system.order.service.domain.event.OrderPaidEvent;
 import com.food.ordering.system.order.service.domain.exception.OrderDomainException;
 import com.food.ordering.system.order.service.domain.mapper.OrderDataMapper;
-import com.food.ordering.system.order.service.domain.ports.output.respository.CustomerRepository;
-import com.food.ordering.system.order.service.domain.ports.output.respository.OrderRepository;
-import com.food.ordering.system.order.service.domain.ports.output.respository.RestaurantRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.CustomerRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.OrderRepository;
+import com.food.ordering.system.order.service.domain.ports.output.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,9 +30,6 @@ public class OrderCreateHelper {
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
     private final OrderDataMapper orderDataMapper;
-    private final DomainEventPublisher<OrderCancelledEvent> orderCancelledEventDomainEventPublisher;
-    private final DomainEventPublisher<OrderPaidEvent> orderPaidEventDomainEventPublisher;
-    private final DomainEventPublisher<OrderCreatedEvent> orderCreatedEventDomainEventPublisher;
 
     @Transactional
     public OrderCreatedEvent persistOrder(CreateOrderCommand createOrderCommand) {
@@ -40,10 +37,7 @@ public class OrderCreateHelper {
         Restaurant restaurant = checkRestaurant(createOrderCommand);
         Order order = orderDataMapper.createOrderCommandToOrder(createOrderCommand);
         OrderCreatedEvent orderCreatedEvent = orderDomainService
-                .validateAndInitiateOrder(
-                        order,
-                        restaurant,
-                        orderCreatedEventDomainEventPublisher);
+                .validateAndInitiateOrder(order, restaurant);
         saveOrder(order);
         log.info("Order is created with id: {}", order.getId().getValue());
         return orderCreatedEvent;

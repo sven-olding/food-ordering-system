@@ -3,10 +3,12 @@ package com.food.ordering.system.order.service.messaging.listener.kafka;
 import com.food.ordering.system.kafka.consumer.KafkaConsumer;
 import com.food.ordering.system.kafka.order.avro.model.OrderApprovalStatus;
 import com.food.ordering.system.kafka.order.avro.model.RestaurantApprovalResponseAvroModel;
+import com.food.ordering.system.order.service.domain.exception.OrderNotFoundException;
 import com.food.ordering.system.order.service.domain.ports.input.message.listener.restaurantapproval.RestaurantApprovalResponseMessageListener;
 import com.food.ordering.system.order.service.messaging.mapper.OrderMessagingDataMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
@@ -32,18 +34,26 @@ public class RestaurantApprovalResponseKafkaListener implements KafkaConsumer<Re
         log.info("{} number of restaurant responses received with keys: {}, partitions: {} and offsets: {}",
                 messages.size(), keys, partitions, offsets);
         messages.forEach(restaurantApprovalResponseAvroModel -> {
-            if (restaurantApprovalResponseAvroModel.getOrderApprovalStatus() == OrderApprovalStatus.APPROVED) {
-                log.info("Processing approved order for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
-                restaurantApprovalResponseMessageListener.orderApproved(orderMessagingDataMapper
-                        .restaurantApprovalResponseAvroModelToRestaurantApprovalResponse(
-                                restaurantApprovalResponseAvroModel));
-            } else if (restaurantApprovalResponseAvroModel.getOrderApprovalStatus() == OrderApprovalStatus.REJECTED) {
-                log.info("Order with id: {} was rejected with failure messages: {}",
-                        restaurantApprovalResponseAvroModel.getOrderId(),
-                        restaurantApprovalResponseAvroModel.getFailureMessages());
-                restaurantApprovalResponseMessageListener.orderRejected(orderMessagingDataMapper
-                        .restaurantApprovalResponseAvroModelToRestaurantApprovalResponse(
-                                restaurantApprovalResponseAvroModel));
+            try {
+                if (restaurantApprovalResponseAvroModel.getOrderApprovalStatus() == OrderApprovalStatus.APPROVED) {
+                    log.info("Processing approved order for order id: {}", restaurantApprovalResponseAvroModel.getOrderId());
+                    restaurantApprovalResponseMessageListener.orderApproved(orderMessagingDataMapper
+                            .restaurantApprovalResponseAvroModelToRestaurantApprovalResponse(
+                                    restaurantApprovalResponseAvroModel));
+                } else if (restaurantApprovalResponseAvroModel.getOrderApprovalStatus() == OrderApprovalStatus.REJECTED) {
+                    log.info("Order with id: {} was rejected with failure messages: {}",
+                            restaurantApprovalResponseAvroModel.getOrderId(),
+                            restaurantApprovalResponseAvroModel.getFailureMessages());
+                    restaurantApprovalResponseMessageListener.orderRejected(orderMessagingDataMapper
+                            .restaurantApprovalResponseAvroModelToRestaurantApprovalResponse(
+                                    restaurantApprovalResponseAvroModel));
+                }
+            } catch (OptimisticLockingFailureException e) {
+                log.error("OptimisticLockingFailureException occurred while processing restaurant approval response for order id: {}",
+                        restaurantApprovalResponseAvroModel.getOrderId(), e);
+            } catch (OrderNotFoundException e) {
+                log.error("OrderNotFoundException occurred while processing restaurant approval response for order id: {}",
+                        restaurantApprovalResponseAvroModel.getOrderId(), e);
             }
         });
     }

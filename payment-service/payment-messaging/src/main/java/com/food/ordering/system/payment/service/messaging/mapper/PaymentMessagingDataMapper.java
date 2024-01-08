@@ -10,6 +10,7 @@ import com.food.ordering.system.payment.service.domain.entity.Payment;
 import com.food.ordering.system.payment.service.domain.event.PaymentCancelledEvent;
 import com.food.ordering.system.payment.service.domain.event.PaymentCompletedEvent;
 import com.food.ordering.system.payment.service.domain.event.PaymentEvent;
+import com.food.ordering.system.payment.service.domain.outbox.model.OrderEventPayload;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;
@@ -68,4 +69,18 @@ public class PaymentMessagingDataMapper {
                 .build();
     }
 
+    public PaymentResponseAvroModel orderEventPayloadToPaymentResponseAvroModel(
+            String sagaId, OrderEventPayload orderEventPayload) {
+        return PaymentResponseAvroModel.newBuilder()
+                .setId(UUID.randomUUID().toString())
+                .setSagaId(sagaId)
+                .setPaymentId(orderEventPayload.getPaymentId())
+                .setCustomerId(orderEventPayload.getCustomerId())
+                .setOrderId(orderEventPayload.getOrderId())
+                .setPrice(orderEventPayload.getPrice())
+                .setCreatedAt(orderEventPayload.getCreatedAt().toInstant())//??
+                .setPaymentStatus(PaymentStatus.valueOf(orderEventPayload.getPaymentStatus()))
+                .setFailureMessages(orderEventPayload.getFailureMessages())
+                .build();
+    }
 }
