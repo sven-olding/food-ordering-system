@@ -13,32 +13,22 @@ CREATE TABLE customer.customers
     CONSTRAINT customers_pkey PRIMARY KEY (id)
 );
 
-DROP MATERIALIZED VIEW IF EXISTS customer.order_customer_m_view;
+DROP TYPE IF EXISTS outbox_status;
+CREATE TYPE outbox_status AS ENUM ('STARTED', 'COMPLETED', 'FAILED');
 
-CREATE MATERIALIZED VIEW customer.order_customer_m_view
-    TABLESPACE pg_default
-AS
-SELECT id,
-       username,
-       first_name,
-       last_name
-FROM customer.customers
-WITH DATA;
+DROP TABLE IF EXISTS "customer".customer_outbox CASCADE;
 
-REFRESH MATERIALIZED VIEW customer.order_customer_m_view;
+CREATE TABLE "customer".customer_outbox
+(
+    id uuid NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    processed_at TIMESTAMP WITH TIME ZONE,
+    payload jsonb NOT NULL,
+    outbox_status outbox_status NOT NULL,
+    version integer NOT NULL,
+    CONSTRAINT customer_outbox_pkey PRIMARY KEY (id)
+);
 
-CREATE OR REPLACE FUNCTION customer.refresh_order_customer_m_view()
-    returns trigger
-AS
-'
-    BEGIN
-        refresh materialized view customer.order_customer_m_view;
-        return null;
-    END;
-' LANGUAGE plpgsql;
-
-CREATE TRIGGER refresh_order_customer_m_view
-    after INSERT OR UPDATE OR DELETE OR TRUNCATE
-    ON customer.customers
-    FOR EACH STATEMENT
-EXECUTE PROCEDURE customer.refresh_order_customer_m_view();
+CREATE INDEX "customer_outbox_status"
+    ON "customer".customer_outbox
+        (id, outbox_status);

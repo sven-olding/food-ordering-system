@@ -22,7 +22,7 @@ public class KafkaMessageHelper {
         this.objectMapper = objectMapper;
     }
 
-    public <T> T getOrderEventPayload(String payload, Class<T> outputType) {
+    public <T> T getPayload(String payload, Class<T> outputType) {
         try {
             return objectMapper.readValue(payload, outputType);
         } catch (JsonProcessingException e) {
