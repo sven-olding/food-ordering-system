@@ -1,19 +1,14 @@
 package com.food.ordering.system.customer.service.domain.mapper;
 
-import com.food.ordering.system.customer.service.domain.CustomerCreateHelper;
 import com.food.ordering.system.customer.service.domain.dto.create.CreateCustomerCommand;
 import com.food.ordering.system.customer.service.domain.dto.create.CreateCustomerResponse;
 import com.food.ordering.system.customer.service.domain.dto.track.GetCustomerResponse;
 import com.food.ordering.system.customer.service.domain.event.CustomerCreatedEvent;
 import com.food.ordering.system.customer.service.domain.outbox.model.CustomerCreatedEventPayload;
-import com.food.ordering.system.order.service.domain.entity.Customer;
+import com.food.ordering.system.customer.service.domain.entity.Customer;
 import org.springframework.stereotype.Component;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collections;
-
-import static com.food.ordering.system.domain.DomainConstants.TIMEZONE_ID;
 
 @Component
 public class CustomerDataMapper {

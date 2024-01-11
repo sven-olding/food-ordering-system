@@ -12,4 +12,13 @@ public class CustomerDataAccessMapper {
         customer.setId(new CustomerId(customerEntity.getId()));
         return customer;
     }
+
+    public CustomerEntity customerToCustomerEntity(Customer customer) {
+        return CustomerEntity.builder()
+                .id(customer.getId().getValue())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
+                .username(customer.getUsername())
+                .build();
+    }
 }

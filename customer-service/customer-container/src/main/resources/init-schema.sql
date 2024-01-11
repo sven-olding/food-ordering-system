@@ -4,6 +4,7 @@ CREATE SCHEMA customer;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+DROP TABLE IF EXISTS customer.customers CASCADE;
 CREATE TABLE customer.customers
 (
     id         uuid                                           NOT NULL,

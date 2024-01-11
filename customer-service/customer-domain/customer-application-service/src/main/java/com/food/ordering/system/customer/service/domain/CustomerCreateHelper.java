@@ -5,13 +5,11 @@ import com.food.ordering.system.customer.service.domain.event.CustomerCreatedEve
 import com.food.ordering.system.customer.service.domain.exception.CustomerDomainException;
 import com.food.ordering.system.customer.service.domain.mapper.CustomerDataMapper;
 import com.food.ordering.system.customer.service.domain.ports.output.repository.CustomerRepository;
-import com.food.ordering.system.order.service.domain.entity.Customer;
+import com.food.ordering.system.customer.service.domain.entity.Customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
